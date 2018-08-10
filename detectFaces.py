@@ -51,6 +51,6 @@ def getFaces(img):
 
 
 if __name__ == '__main__':
-    img = getFaces(cv2.imread('images/capture.png'))
-    for i, img in enumerate(img):
+    imgs = getFaces(cv2.imread('images/capture.png'))
+    for i, img in enumerate(imgs):
         cv2.imwrite('images/image{0}.jpg'.format(i), img)
