@@ -22,34 +22,24 @@ class CNN(Chain):
             fc5=L.Linear(256, n_class)
         )
 
-    def __call__(self, x, t, train):
-        h = F.relu(self.norm1(self.conv1(x), test=not train))
-        h = F.relu(self.norm2(self.conv2(h), test=not train))
-        h = F.max_pooling_2d(h, 2)
-        h = F.dropout(h, 0.25, train=train)
-        h = F.relu(self.norm3(self.conv3(h), test=not train))
-        h = F.relu(self.norm4(self.conv4(h), test=not train))
-        h = F.max_pooling_2d(h, 2)
-        h = F.dropout(h, 0.25, train=train)
-        h = F.relu(self.norm5(self.conv5(h), test=not train))
-        h = F.relu(self.norm6(self.conv6(h), test=not train))
-        h = F.max_pooling_2d(h, 2)
-        h = F.relu(self.fc4(h))
-        h = F.dropout(h, 0.25, train=train)
-        self.y = self.fc5(h)
-        self.loss = F.sigmoid_cross_entropy(self.y, t)
-        return self.loss
-
     def predict(self, x, train=False):
         h = F.relu(self.norm1(self.conv1(x), test=not train))
         h = F.relu(self.norm2(self.conv2(h), test=not train))
         h = F.max_pooling_2d(h, 2)
+        h = F.dropout(h, 0.25, train=train)
         h = F.relu(self.norm3(self.conv3(h), test=not train))
         h = F.relu(self.norm4(self.conv4(h), test=not train))
         h = F.max_pooling_2d(h, 2)
+        h = F.dropout(h, 0.25, train=train)
         h = F.relu(self.norm5(self.conv5(h), test=not train))
         h = F.relu(self.norm6(self.conv6(h), test=not train))
         h = F.max_pooling_2d(h, 2)
         h = F.relu(self.fc4(h))
+        h = F.dropout(h, 0.25, train=train)
         self.y = self.fc5(h)
         return self.y
+
+    def __call__(self, x, t, train):
+        self.y = self.predict(x, train=train)
+        self.loss = F.sigmoid_cross_entropy(self.y, t)
+        return self.loss
