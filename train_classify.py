@@ -1,12 +1,11 @@
 import argparse
 import numpy as np
 import chainer
-from chainer import cuda, Variable, Chain, optimizers, serializers
-import chainer.functions as F
-import chainer.links as L
+from chainer import serializers, cuda, optimizers, Variable
 import json
 import time
 import os
+from models.CNN import CNN
 
 train_data = 'data/train_data.npy'
 test_data = 'data/test_data.npy'
@@ -17,6 +16,10 @@ time_label = time.strftime("%Y%m%d_%H%M%S")
 SavedModelFolder = 'TrainLog/' + time_label + '/FaceClasModel'
 categories = ['Male', 'Eyeglasses', 'Wearing_Hat', 'Young']
 num_cate = len(categories)
+ClasResult = [['Female', 'Male'],
+              ['No eyeglasses', 'Eyeglasses'],
+              ['No wearing hat', 'Wearing hat'],
+              ['Not young', 'Young']]
 log_txt = 'TrainLog/' + time_label + '/log.txt'
 log_dat = 'TrainLog/' + time_label + '/log.dat'
 
@@ -79,44 +82,6 @@ def get_data(train_data_file, test_data_file, train_name_file, test_name_file):
     return X_train, y_train, X_test, y_test
 
 
-class CNN(Chain):
-    def __init__(self):
-        super(CNN, self).__init__(
-            conv1=L.Convolution2D(3, 32, 3, pad=1),
-            conv2=L.Convolution2D(32, 32, 3, pad=1),
-            conv3=L.Convolution2D(32, 64, 3, pad=1),
-            conv4=L.Convolution2D(64, 64, 3, pad=1),
-            conv5=L.Convolution2D(64, 64, 3, pad=1),
-            conv6=L.Convolution2D(64, 64, 3, pad=1),
-            norm1=L.BatchNormalization(32),
-            norm2=L.BatchNormalization(32),
-            norm3=L.BatchNormalization(64),
-            norm4=L.BatchNormalization(64),
-            norm5=L.BatchNormalization(64),
-            norm6=L.BatchNormalization(64),
-            fc4=L.Linear(4096, 256),
-            fc5=L.Linear(256, num_cate)
-        )
-
-    def __call__(self, x, t, train):
-        h = F.relu(self.norm1(self.conv1(x), test=not train))
-        h = F.relu(self.norm2(self.conv2(h), test=not train))
-        h = F.max_pooling_2d(h, 2)
-        h = F.dropout(h, 0.25, train=train)
-        h = F.relu(self.norm3(self.conv3(h), test=not train))
-        h = F.relu(self.norm4(self.conv4(h), test=not train))
-        h = F.max_pooling_2d(h, 2)
-        h = F.dropout(h, 0.25, train=train)
-        h = F.relu(self.norm5(self.conv5(h), test=not train))
-        h = F.relu(self.norm6(self.conv6(h), test=not train))
-        h = F.max_pooling_2d(h, 2)
-        h = F.relu(self.fc4(h))
-        h = F.dropout(h, 0.25, train=train)
-        self.y = self.fc5(h)
-        self.loss = F.sigmoid_cross_entropy(self.y, t)
-        return self.loss
-
-
 def parser_args():
     parser = argparse.ArgumentParser(
         description='Multi-Task Network for Attribute Classification')
@@ -141,7 +106,7 @@ def trainClassify():
     device_id = args.gpu
 
     X_train, y_train, X_test, y_test = get_data(train_data, test_data, train_name, test_name)
-    model = CNN()
+    model = CNN(n_class=num_cate)
     if device_id >= 0:
         xp = cuda.cupy
         model.to_gpu(device_id)
