@@ -36,3 +36,7 @@ if [ -e "$FILE_NAME" ]; then
 else
     wget "https://drive.google.com/uc?export=download&id=${ANNO_ID}" -O ${ANNO_NAME}
 fi
+
+# Create cropped face images data
+cd ..
+python crop_images.py

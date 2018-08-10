@@ -2,12 +2,14 @@ import os
 import cv2
 import dlib
 import numpy as np
+import argparse
 
 # dlib_predictor_path = os.path.expanduser('~')+"/dlib/shape_predictor_68_face_landmarks.dat"
 dlib_predictor_path = "./dlib/shape_predictor_68_face_landmarks.dat"
 
 
-def getFaces(img):
+def getFaces(img_path):
+    img = cv2.imread(img_path)
     results = []
     height = np.size(img, 0)
     width = np.size(img, 1)
@@ -16,7 +18,7 @@ def getFaces(img):
     dets = detector(img)
     scale = 0.25
     if len(dets) < 1:
-        print ("Found no face!")
+        print ("{0}: Found no face!".format(img_path))
         return results
     for face in dets:
         face = predictor(img, face)
@@ -50,7 +52,15 @@ def getFaces(img):
     return results
 
 
+def parser_args():
+    parser = argparse.ArgumentParser(description='Detect face from image')
+    parser.add_argument('--image', '-i', default='images/capture.png', help='Image path')
+    args = parser.parse_args()
+    return args
+
+
 if __name__ == '__main__':
-    imgs = getFaces(cv2.imread('images/capture.png'))
+    args = parser_args()
+    imgs = getFaces(args.image)
     for i, img in enumerate(imgs):
         cv2.imwrite('images/image{0}.jpg'.format(i), img)

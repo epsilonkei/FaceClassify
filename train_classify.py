@@ -6,6 +6,7 @@ import json
 import time
 import os
 from models.CNN import CNN
+from crop_images import createFolder
 
 train_data = 'data/train_data.npy'
 test_data = 'data/test_data.npy'
@@ -91,14 +92,6 @@ def parser_args():
                         default=0.0001, help='Weight decay ratio')
     args = parser.parse_args()
     return args
-
-
-def createFolder(directory):
-    try:
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-    except OSError:
-        print ('Error: Creating directory. ' + directory)
 
 
 def trainClassify():
