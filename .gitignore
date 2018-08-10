@@ -35,9 +35,10 @@
 *.pyc
 
 # Folder
-CelebA
-data
-TrainLog
+CelebA*
+images/*
+data*
+TrainLog*
 
 # Environment
 *~
