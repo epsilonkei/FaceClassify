@@ -7,12 +7,13 @@ import time
 import os
 from models.CNN import CNN
 from crop_images import createFolder
+from wrap_data import data_dir
 
-train_data = 'data/train_data.npy'
-test_data = 'data/test_data.npy'
-train_name = 'data/train_name.json'
-test_name = 'data/test_name.json'
-annotation = 'data/list_attr_celeba.txt'
+train_data = data_dir + '/train_data.npy'
+test_data = data_dir + '/test_data.npy'
+train_name = data_dir + '/train_name.json'
+test_name = data_dir + '/test_name.json'
+annotation = data_dir + '/list_attr_celeba.txt'
 time_label = time.strftime("%Y%m%d_%H%M%S")
 SavedModelFolder = 'TrainLog/' + time_label + '/FaceClasModel'
 categories = ['Male', 'Eyeglasses', 'Wearing_Hat', 'Young']
