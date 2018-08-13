@@ -7,7 +7,8 @@ from models.CNN import CNN
 from train_classify import num_cate, ClasResult
 
 model = CNN(n_class=num_cate)
-serializers.load_hdf5('TrainLog/20180803_110721_final/FaceClasModel/FaceCl_050.model', model)
+# serializers.load_hdf5('TrainLog/20180803_110721_final/FaceClasModel/FaceCl_050.model', model)
+serializers.load_hdf5('TrainLog/20180813_191926/FaceClasModel/FaceCl_050.model', model)
 
 
 def parser_args():
@@ -49,7 +50,7 @@ def classify(args, images, model):
 
 if __name__ == '__main__':
     args = parser_args()
-    images = getFaces(cv2.imread(args.image))
+    images = getFaces(args.image)
     classify(args, images, model)
     for i, img in enumerate(images):
         cv2.imwrite('images/image{0}.jpg'.format(i), img)
