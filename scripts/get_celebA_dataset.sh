@@ -37,6 +37,16 @@ else
     wget "https://drive.google.com/uc?export=download&id=${ANNO_ID}" -O ${ANNO_NAME}
 fi
 
-# Create cropped face images data
 cd ..
+WRAP_DATA_FOLDER=data
+if [ -d "$WRAP_DATA_FOLDER" ]; then
+    echo "Error[mkdir]: $WRAP_DATA_FOLDER directory already exists"
+else
+    mkdir $WRAP_DATA_FOLDER
+fi
+cp $DATASETS_FOLDER/$ANNO_NAME $WRAP_DATA_FOLDER
+
+# Create cropped face images data
 python crop_images.py
+# Wrap data to npy and json file
+python wrap_data.py
