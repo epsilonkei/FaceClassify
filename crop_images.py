@@ -14,6 +14,8 @@ def parser_args():
     parser = argparse.ArgumentParser(description='Crop face images from images')
     parser.add_argument('--dataset_dir', '-d', default=dataset_dir, help='Dataset directory')
     parser.add_argument('--target_dir', '-t', default=target_dir, help='Target directory')
+    parser.add_argument('--process', '-p', default=10, type=int,
+                        help='Number of Threads using for Parallel Computing')
     args = parser.parse_args()
     return args
 
@@ -34,8 +36,8 @@ def cropImage(i, file, args):
             target_file = name + time.strftime("%Y%m%d-%H%M%S") + ext
             cv2.imwrite(os.path.join(args.target_dir, target_file), face_img[0])
             #
-    if (i % 200 == 0):
-        print ('{0: 7d} Done'.format(i))
+    if (i % 500 == 0):
+        print ('{0: 7d} - {1: 7d}: Start Cropping'.format(i, i + 500))
 
 
 def wrapperCropImage(argus):
@@ -43,8 +45,12 @@ def wrapperCropImage(argus):
 
 
 if __name__ == '__main__':
+    start_time = time.time()
     args = parser_args()
     files = os.listdir(args.dataset_dir)
     createFolder(args.target_dir)
-    p = Pool(16)
-    p.map(wrapperCropImage, [[i, file, args] for i, file in enumerate(files)])
+    _pool = Pool(args.process)
+    _pool.map_async(wrapperCropImage, [[i, file, args] for i, file in enumerate(files)]).get(9999999)  # For Ctrl-C
+    _pool.close()
+    elap_time = time.time() - start_time
+    print ('Elapsed time: {0: 7.2f} seconds'.format(elap_time))

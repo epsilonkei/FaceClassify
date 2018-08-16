@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+echo "==== Download dataset and annotation file ====="
 # Create datasets folder
 DATASETS_FOLDER=CelebA
 if [ -d "$DATASETS_FOLDER" ]; then
@@ -46,7 +47,9 @@ else
 fi
 cp $DATASETS_FOLDER/$ANNO_NAME $WRAP_DATA_FOLDER
 
+echo "==== Create cropped face images data ====="
 # Create cropped face images data
-python crop_images.py
+python crop_images.py --process 10
+echo "==== Wrap data to npy and json file  ====="
 # Wrap data to npy and json file
 python wrap_data.py
