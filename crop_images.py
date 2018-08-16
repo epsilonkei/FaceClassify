@@ -45,12 +45,9 @@ def wrapperCropImage(argus):
 
 
 if __name__ == '__main__':
-    start_time = time.time()
     args = parser_args()
     files = os.listdir(args.dataset_dir)
     createFolder(args.target_dir)
     _pool = Pool(args.process)
     _pool.map_async(wrapperCropImage, [[i, file, args] for i, file in enumerate(files)]).get(9999999)  # For Ctrl-C
     _pool.close()
-    elap_time = time.time() - start_time
-    print ('Elapsed time: {0: 7.2f} seconds'.format(elap_time))
