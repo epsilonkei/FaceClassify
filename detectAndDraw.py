@@ -3,6 +3,7 @@ import numpy as np
 import os
 import argparse
 import dlib
+import time
 
 dlib_predictor_path = "./dlib/shape_predictor_68_face_landmarks.dat"
 
@@ -59,16 +60,16 @@ def detectAndDrawWithDlib(frame, save_path):
         l_eye_center = np.average(face[42:48], axis=0)
         center = np.array((r_eye_center + l_eye_center) / 2, dtype=np.int32)
         length = np.linalg.norm(r_eye_center - l_eye_center)
-        top = center[1] - 11 * int(length*scale)
+        top = center[1] - 10 * int(length*scale)
         top1 = 0 if top < 0 else top
         #
-        bottom = center[1] + 11 * int(length*scale)
+        bottom = center[1] + 10 * int(length*scale)
         bottom1 = orgHeight if bottom > orgHeight else bottom
         #
-        left = center[0] - 9 * int(length*scale)
+        left = center[0] - 10 * int(length*scale)
         left1 = 0 if left < 0 else left
         #
-        right = center[0] + 9 * int(length*scale)
+        right = center[0] + 10 * int(length*scale)
         right1 = orgWidth if right > orgWidth else right
         #
         cv2.rectangle(frame, (left1, top1), (right1, bottom1),
@@ -82,5 +83,13 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Face Classify from image')
     parser.add_argument('--image', '-i', default='images/capture.png', help='Image path')
     args = parser.parse_args()
+    #
+    start_time = time.process_time()
     detectAndDrawWithHaar(cv2.imread(args.image), save_path_haar)
+    elap_time = time.process_time() - start_time
+    print ('Haar Algorithm elapsed time: {0:3.2f} seconds'.format(elap_time))
+    #
+    start_time = time.process_time()
     detectAndDrawWithDlib(cv2.imread(args.image), save_path_dlib)
+    elap_time = time.process_time() - start_time
+    print ('Dlib library elapsed time: {0:3.2f} seconds'.format(elap_time))
