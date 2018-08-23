@@ -22,6 +22,10 @@ ClasResult = [['Female', 'Male'],
               ['No eyeglasses', 'Eyeglasses'],
               ['No wearing hat', 'Wearing hat'],
               ['Not young', 'Young']]
+# ClasResult = [['FM', 'M'],
+#               ['NE', 'E'],
+#               ['NH', 'H'],
+#               ['NY', 'Y']]
 log_txt = 'TrainLog/' + time_label + '/log.txt'
 log_dat = 'TrainLog/' + time_label + '/log.dat'
 

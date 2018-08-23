@@ -6,6 +6,7 @@ import detectFaces
 from models.CNN import CNN
 from train_classify import num_cate, ClasResult
 from utils import visualization
+import time
 
 model = CNN(n_class=num_cate)
 # serializers.load_hdf5('TrainLog/20180803_110721_final/FaceClasModel/FaceCl_050.model', model)
@@ -23,11 +24,10 @@ def parser_args():
     return args
 
 
-def classify(args, images):
-    device_id = args.gpu
-    if device_id >= 0:
+def classify(gpu_id, images):
+    if gpu_id >= 0:
         xp = cuda.cupy
-        model.to_gpu(device_id)
+        model.to_gpu(gpu_id)
     else:
         xp = np
     X = []
@@ -38,7 +38,7 @@ def classify(args, images):
         X.append(xp.transpose(cv2.resize(im, (64, 64)), (2, 0, 1)))
     X = xp.array(X, dtype=np.float32)
     pred = model.predict(X, train=False)
-    if device_id >= 0:
+    if gpu_id >= 0:
         prediction = ((np.sign(cuda.to_cpu(pred.data)) + 1) / 2).astype(np.int)
     else:
         prediction = ((np.sign(np.array(pred.data)) + 1) / 2).astype(np.int)
@@ -47,30 +47,29 @@ def classify(args, images):
                ', '.join(ClasResult[j][pre[j]] for j in range(len(pre))))
 
 
-def classifyWithImgResult(args, org_img, images, bboxes):
-    device_id = args.gpu
-    if device_id >= 0:
+def classifyWithImgResult(gpu_id, org_img, images, bboxes):
+    if gpu_id >= 0:
         xp = cuda.cupy
-        model.to_gpu(device_id)
+        model.to_gpu(gpu_id)
     else:
         xp = np
     X = []
     if len(images) == 0:
-        print ('Error: Face not found')
-        return
+        # print ('Error: Face not found')
+        return org_img
     for im in images:
         X.append(xp.transpose(cv2.resize(im, (64, 64)), (2, 0, 1)))
     X = xp.array(X, dtype=np.float32)
     pred = model.predict(X, train=False)
-    if device_id >= 0:
+    if gpu_id >= 0:
         prediction = ((np.sign(cuda.to_cpu(pred.data)) + 1) / 2).astype(np.int)
     else:
         prediction = ((np.sign(np.array(pred.data)) + 1) / 2).astype(np.int)
     captions = ['Face{0:2d}: '.format(i) +
                 '\n '.join(ClasResult[j][pre[j]] for j in range(len(pre)))
                 for i, pre in enumerate(prediction)]
-    for caption in captions:
-        print(caption)
+    # for caption in captions:
+    #     print(caption)
     ret = visualization.draw_instance_bboxes(
         img=org_img,
         bboxes=bboxes,
@@ -81,11 +80,14 @@ def classifyWithImgResult(args, org_img, images, bboxes):
 
 if __name__ == '__main__':
     args = parser_args()
+    start_time = time.process_time()
     # images = detectFaces.getFaces(args.image)
-    # classify(args, images)
+    # classify(args.gpu, images)
     # for i, img in enumerate(images):
     #     cv2.imwrite('images/image{0}.jpg'.format(i), img)
     image = cv2.imread(args.image)
-    f_imgs, bboxes = detectFaces.getFacesWithBorder(image)
-    ret_img = classifyWithImgResult(args, image, f_imgs, bboxes)
+    f_imgs, bboxes = detectFaces.getFacesWithBorderUsingDlib(image)
+    ret_img = classifyWithImgResult(args.gpu, image, f_imgs, bboxes)
     cv2.imwrite(args.out_file, ret_img)
+    elap_time = time.process_time() - start_time
+    print ('Elapsed time: {0:3.2f} seconds'.format(elap_time))

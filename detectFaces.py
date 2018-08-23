@@ -52,7 +52,7 @@ def getFaces(img_path):
     return results
 
 
-def getFacesWithBorder(img):
+def getFacesWithBorderUsingDlib(img):
     results = []
     bboxes = []
     height = np.size(img, 0)
@@ -62,8 +62,8 @@ def getFacesWithBorder(img):
     dets = detector(img)
     scale = 0.25
     if len(dets) < 1:
-        print ("Found no face!")
-        return results
+        # print ("Found no face!")
+        return results, bboxes
     for face in dets:
         face = predictor(img, face)
         face = np.array([[face.part(i).x, face.part(i).y] for i in range(68)])
@@ -109,6 +109,40 @@ def getFacesWithBorder(img):
     return results, bboxes
 
 
+def getFacesWithBorderUsingHaar(img):
+    results = []
+    bboxes = []
+    height = np.size(img, 0)
+    width = np.size(img, 1)
+    cascade_path = os.path.expanduser('~')+"/.pyenv/versions/anaconda3-4.3.0/share/OpenCV/haarcascades/haarcascade_frontalface_alt2.xml"
+    cascade = cv2.CascadeClassifier(cascade_path)
+    height, width = img.shape[:2]
+    facerect = cascade.detectMultiScale(
+        cv2.cvtColor(img, cv2.COLOR_BGR2GRAY),
+        scaleFactor=1.11,
+        minNeighbors=3,
+        minSize=(100, 100)
+    )
+    if len(facerect) < 1:
+        # print ("Found no face!")
+        return results, bboxes
+    for rect in facerect:
+        org_length = rect[3]/2.
+        face_center = np.array((rect[0:2]+rect[2:4]/2.)-np.array([0, org_length*0.25])).astype(np.int32)
+        scale = 1.7
+        af_length = int(min([min(face_center[0]+org_length*scale, img.shape[1])-face_center[0], face_center[0]-max(face_center[0]-org_length*scale, 0),
+                             min(face_center[1]+org_length*scale, img.shape[0])-face_center[1], face_center[1]-max(face_center[1]-org_length*scale, 0)]))
+        img_f = np.copy(img[face_center[1]-af_length: face_center[1]+af_length,
+                            face_center[0]-af_length: face_center[0]+af_length])
+        results.append(img_f)
+        top = face_center[1] - int(0.8*af_length)
+        bot = face_center[1] + int(0.8*af_length)
+        lef = face_center[0] - int(0.6*af_length)
+        rig = face_center[0] + int(0.6*af_length)
+        bboxes.append([top, bot, lef, rig])
+    return results, bboxes
+
+
 def parser_args():
     parser = argparse.ArgumentParser(description='Detect face from image')
     parser.add_argument('--image', '-i', default='images/capture.png', help='Image path')
@@ -120,7 +154,7 @@ if __name__ == '__main__':
     args = parser_args()
     # imgs = getFaces(args.image)
     image = cv2.imread(args.image)
-    imgs, bboxes = getFacesWithBorder(image)
+    imgs, bboxes = getFacesWithBorderUsingDlib(image)
     for i, box in enumerate(bboxes):
         cv2.rectangle(image, (box[2], box[0]), (box[3], box[1]),
                       (0, 300, 300), thickness=2)
