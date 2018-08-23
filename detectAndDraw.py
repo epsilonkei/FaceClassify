@@ -6,11 +6,23 @@ import dlib
 import time
 
 dlib_predictor_path = "./dlib/shape_predictor_68_face_landmarks.dat"
+cascade_path = os.path.expanduser('~')+"/.pyenv/versions/anaconda3-4.3.0/share/OpenCV/haarcascades/haarcascade_frontalface_alt2.xml"
 
 
-def detectAndDrawWithHaar(frame, save_path):
-    cascade_path = os.path.expanduser('~')+"/.pyenv/versions/anaconda3-4.3.0/share/OpenCV/haarcascades/haarcascade_frontalface_alt2.xml"
+def load_cascade():
+    print("[INFO] loading facial cascade")
     cascade = cv2.CascadeClassifier(cascade_path)
+    return cascade
+
+
+def load_dlib_predictor():
+    print("[INFO] loading facial landmark predictor...")
+    detector = dlib.get_frontal_face_detector()
+    predictor = dlib.shape_predictor(dlib_predictor_path)
+    return detector, predictor
+
+
+def detectAndDrawWithHaar(frame, cascade, save_path):
     orgHeight, orgWidth = frame.shape[:2]
     while (orgWidth > 1000 or orgHeight > 1000):
         frame = cv2.resize(frame, (int(orgWidth/2), int(orgHeight/2)))
@@ -38,9 +50,7 @@ def detectAndDrawWithHaar(frame, save_path):
     cv2.imwrite(save_path, img)
 
 
-def detectAndDrawWithDlib(frame, save_path):
-    detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor(dlib_predictor_path)
+def detectAndDrawWithDlib(frame, detector, predict, save_path):
     orgHeight, orgWidth = frame.shape[:2]
     while (orgWidth > 1000 or orgHeight > 1000):
         frame = cv2.resize(frame, (int(orgWidth/2), int(orgHeight/2)))
@@ -82,13 +92,15 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Face Classify from image')
     parser.add_argument('--image', '-i', default='images/capture.png', help='Image path')
     args = parser.parse_args()
+    face_cascade = load_cascade()
+    detector, predictor = load_dlib_predictor()
     #
     start_time = time.process_time()
-    detectAndDrawWithHaar(cv2.imread(args.image), save_path_haar)
+    detectAndDrawWithHaar(cv2.imread(args.image), face_cascade, save_path_haar)
     elap_time = time.process_time() - start_time
     print ('Haar Algorithm elapsed time: {0:3.2f} seconds'.format(elap_time))
     #
     start_time = time.process_time()
-    detectAndDrawWithDlib(cv2.imread(args.image), save_path_dlib)
+    detectAndDrawWithDlib(cv2.imread(args.image), detector, predictor, save_path_dlib)
     elap_time = time.process_time() - start_time
     print ('Dlib library elapsed time: {0:3.2f} seconds'.format(elap_time))

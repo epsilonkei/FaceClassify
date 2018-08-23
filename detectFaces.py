@@ -1,20 +1,14 @@
-import os
 import cv2
-import dlib
 import numpy as np
 import argparse
-
-# dlib_predictor_path = os.path.expanduser('~')+"/dlib/shape_predictor_68_face_landmarks.dat"
-dlib_predictor_path = "./dlib/shape_predictor_68_face_landmarks.dat"
+from detectAndDraw import load_cascade, load_dlib_predictor
 
 
-def getFaces(img_path):
+def getFaces(detector, predictor, img_path):
     img = cv2.imread(img_path)
     results = []
     height = np.size(img, 0)
     width = np.size(img, 1)
-    detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor(dlib_predictor_path)
     dets = detector(img)
     scale = 0.25
     if len(dets) < 1:
@@ -52,13 +46,11 @@ def getFaces(img_path):
     return results
 
 
-def getFacesWithBorderUsingDlib(img):
+def getFacesWithBorderUsingDlib(detector, predictor, img):
     results = []
     bboxes = []
     height = np.size(img, 0)
     width = np.size(img, 1)
-    detector = dlib.get_frontal_face_detector()
-    predictor = dlib.shape_predictor(dlib_predictor_path)
     dets = detector(img)
     scale = 0.25
     if len(dets) < 1:
@@ -109,13 +101,11 @@ def getFacesWithBorderUsingDlib(img):
     return results, bboxes
 
 
-def getFacesWithBorderUsingHaar(img):
+def getFacesWithBorderUsingHaar(cascade, img):
     results = []
     bboxes = []
     height = np.size(img, 0)
     width = np.size(img, 1)
-    cascade_path = os.path.expanduser('~')+"/.pyenv/versions/anaconda3-4.3.0/share/OpenCV/haarcascades/haarcascade_frontalface_alt2.xml"
-    cascade = cv2.CascadeClassifier(cascade_path)
     height, width = img.shape[:2]
     facerect = cascade.detectMultiScale(
         cv2.cvtColor(img, cv2.COLOR_BGR2GRAY),
@@ -154,7 +144,10 @@ if __name__ == '__main__':
     args = parser_args()
     # imgs = getFaces(args.image)
     image = cv2.imread(args.image)
-    imgs, bboxes = getFacesWithBorderUsingDlib(image)
+    # face_cascade = load_cascade()
+    # imgs, bboxes = getFacesWithBorderUsingHaar(face_cascade, image)
+    detector, predictor = load_dlib_predictor()
+    imgs, bboxes = getFacesWithBorderUsingDlib(detector, predictor, image)
     for i, box in enumerate(bboxes):
         cv2.rectangle(image, (box[2], box[0]), (box[3], box[1]),
                       (0, 300, 300), thickness=2)
