@@ -2,9 +2,10 @@ import cv2
 import numpy as np
 import os
 
+cascade_path = os.path.expanduser('~')+"/.pyenv/versions/anaconda3-4.3.0/share/OpenCV/haarcascades/haarcascade_frontalface_alt2.xml"
+
 
 def capture_camera(save_path):
-    cascade_path = os.path.expanduser('~')+"/.pyenv/versions/anaconda3-4.3.0/share/OpenCV/haarcascades/haarcascade_frontalface_alt2.xml"
     cascade = cv2.CascadeClassifier(cascade_path)
     cap = cv2.VideoCapture(0)
     while True:
