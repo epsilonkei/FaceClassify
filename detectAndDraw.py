@@ -10,13 +10,13 @@ cascade_path = os.path.expanduser('~')+"/.pyenv/versions/anaconda3-4.3.0/share/O
 
 
 def load_cascade():
-    print("[INFO] loading facial cascade")
+    print("[INFO-opencv] loading facial cascade")
     cascade = cv2.CascadeClassifier(cascade_path)
     return cascade
 
 
 def load_dlib_predictor():
-    print("[INFO] loading facial landmark predictor...")
+    print("[INFO-dlib] loading facial landmark predictor...")
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor(dlib_predictor_path)
     return detector, predictor
