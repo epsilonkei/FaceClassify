@@ -86,7 +86,10 @@ if __name__ == '__main__':
     # for i, img in enumerate(images):
     #     cv2.imwrite('images/image{0}.jpg'.format(i), img)
     image = cv2.imread(args.image)
-    f_imgs, bboxes = detectFaces.getFacesWithBorderUsingDlib(image)
+    # face_cascade = detectFaces.load_cascade()
+    # f_imgs, bboxes = detectFaces.getFacesWithBorderUsingHaar(face_cascade, image)
+    detector, predictor = detectFaces.load_dlib_predictor()
+    f_imgs, bboxes = detectFaces.getFacesWithBorderUsingDlib(detector, predictor, image)
     ret_img = classifyWithImgResult(args.gpu, image, f_imgs, bboxes)
     cv2.imwrite(args.out_file, ret_img)
     elap_time = time.process_time() - start_time
