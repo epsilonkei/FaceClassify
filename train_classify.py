@@ -178,11 +178,13 @@ def trainClassify():
             x = Variable(xp.array(X_test[i: i+batchsize]).astype(xp.float32))
             t = Variable(xp.array(y_test[i: i+batchsize]).astype(xp.int32))
             if device_id >= 0:
-                sum_loss += cuda.to_cpu(model(x, t, False).data) * len(x.data)
-                pred_y.extend((np.sign(cuda.to_cpu(model.y.data)) + 1)/2)
+                with chainer.using_config('train', False):
+                    sum_loss += cuda.to_cpu(model(x, t).data) * len(x.data)
+                    pred_y.extend((np.sign(cuda.to_cpu(model.y.data)) + 1)/2)
             else:
-                sum_loss += np.array(model(x, t, False).data) * len(x.data)
-                pred_y.extend((np.sign(np.array(model.y.data)) + 1)/2)
+                with chainer.using_config('train', False):
+                    sum_loss += np.array(model(x, t).data) * len(x.data)
+                    pred_y.extend((np.sign(np.array(model.y.data)) + 1)/2)
 
         loss = sum_loss / N_test
         accuracy = xp.sum(xp.array(pred_y, dtype=xp.int32) == xp.array(y_test, dtype=xp.int32)) / N_test / num_cate

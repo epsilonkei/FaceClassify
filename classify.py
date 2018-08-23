@@ -1,6 +1,6 @@
 import argparse
 import numpy as np
-from chainer import cuda, serializers
+from chainer import cuda, serializers, using_config
 import cv2
 import detectFaces
 from models.CNN import CNN
@@ -37,7 +37,8 @@ def classify(gpu_id, images):
     for im in images:
         X.append(xp.transpose(cv2.resize(im, (64, 64)), (2, 0, 1)))
     X = xp.array(X, dtype=np.float32)
-    pred = model.predict(X, train=False)
+    with using_config('train', False):
+        pred = model.predict(X)
     if gpu_id >= 0:
         prediction = ((np.sign(cuda.to_cpu(pred.data)) + 1) / 2).astype(np.int)
     else:
@@ -61,7 +62,8 @@ def classifyWithImgResult(gpu_id, org_img, images, bboxes, putText=False):
     for im in images:
         X.append(xp.transpose(cv2.resize(im, (64, 64)), (2, 0, 1)))
     X = xp.array(X, dtype=np.float32)
-    pred = model.predict(X, train=False)
+    with using_config('train', False):
+        pred = model.predict(X)
     if gpu_id >= 0:
         prediction = ((np.sign(cuda.to_cpu(pred.data)) + 1) / 2).astype(np.int)
     else:
