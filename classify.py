@@ -47,7 +47,7 @@ def classify(gpu_id, images):
                ', '.join(ClasResult[j][pre[j]] for j in range(len(pre))))
 
 
-def classifyWithImgResult(gpu_id, org_img, images, bboxes):
+def classifyWithImgResult(gpu_id, org_img, images, bboxes, putText=False):
     if gpu_id >= 0:
         xp = cuda.cupy
         model.to_gpu(gpu_id)
@@ -55,7 +55,8 @@ def classifyWithImgResult(gpu_id, org_img, images, bboxes):
         xp = np
     X = []
     if len(images) == 0:
-        # print ('Error: Face not found')
+        if putText:
+            print ('Error: Face not found')
         return org_img
     for im in images:
         X.append(xp.transpose(cv2.resize(im, (64, 64)), (2, 0, 1)))
@@ -68,8 +69,9 @@ def classifyWithImgResult(gpu_id, org_img, images, bboxes):
     captions = ['Face{0:2d}: '.format(i) +
                 '\n '.join(ClasResult[j][pre[j]] for j in range(len(pre)))
                 for i, pre in enumerate(prediction)]
-    # for caption in captions:
-    #     print(caption)
+    if putText:
+        for caption in captions:
+            print(caption)
     ret = visualization.draw_instance_bboxes(
         img=org_img,
         bboxes=bboxes,
@@ -90,7 +92,7 @@ if __name__ == '__main__':
     # f_imgs, bboxes = detectFaces.getFacesWithBorderUsingHaar(face_cascade, image)
     detector, predictor = detectFaces.load_dlib_predictor()
     f_imgs, bboxes = detectFaces.getFacesWithBorderUsingDlib(detector, predictor, image)
-    ret_img = classifyWithImgResult(args.gpu, image, f_imgs, bboxes)
+    ret_img = classifyWithImgResult(args.gpu, image, f_imgs, bboxes, putText=True)
     cv2.imwrite(args.out_file, ret_img)
     elap_time = time.process_time() - start_time
     print ('Elapsed time: {0:3.2f} seconds'.format(elap_time))
