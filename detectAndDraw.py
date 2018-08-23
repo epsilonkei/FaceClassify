@@ -39,7 +39,6 @@ def detectAndDrawWithHaar(frame, save_path):
 
 
 def detectAndDrawWithDlib(frame, save_path):
-    results = []
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor(dlib_predictor_path)
     orgHeight, orgWidth = frame.shape[:2]
@@ -50,7 +49,7 @@ def detectAndDrawWithDlib(frame, save_path):
     scale = 0.25
     if len(dets) < 1:
         print ("Found no face!")
-        return results
+        cv2.imwrite(save_path, frame)
     for face in dets:
         face = predictor(frame, face)
         face = np.array([[face.part(i).x, face.part(i).y] for i in range(68)])
