@@ -17,6 +17,9 @@ def parser_args():
     parser = argparse.ArgumentParser(description='Face Classify from image')
     parser.add_argument('--gpu', '-g', default=-1, type=int,
                         help='GPU ID (negative value indicates CPU)')
+    parser.add_argument('--dlib', '-d', default=1, type=int,
+                        help='Using dlib or not (positive value for using Dlib, \
+                        negative value for using Haar)')
     parser.add_argument('--image', '-i', default='images/capture.png', help='Image path')
     parser.add_argument('--out_file', '-o', default='images/image_result.jpg',
                         help='Output image directory')
@@ -90,10 +93,12 @@ if __name__ == '__main__':
     # for i, img in enumerate(images):
     #     cv2.imwrite('images/image{0}.jpg'.format(i), img)
     image = cv2.imread(args.image)
-    # face_cascade = detectFaces.load_cascade()
-    # f_imgs, bboxes = detectFaces.getFacesWithBorderUsingHaar(face_cascade, image)
-    detector, predictor = detectFaces.load_dlib_predictor()
-    f_imgs, bboxes = detectFaces.getFacesWithBorderUsingDlib(detector, predictor, image)
+    if args.dlib >= 0:
+        detector, predictor = detectFaces.load_dlib_predictor()
+        f_imgs, bboxes = detectFaces.getFacesWithBorderUsingDlib(detector, predictor, image)
+    else:
+        face_cascade = detectFaces.load_cascade()
+        f_imgs, bboxes = detectFaces.getFacesWithBorderUsingHaar(face_cascade, image)
     ret_img = classifyWithImgResult(args.gpu, image, f_imgs, bboxes, putText=True)
     cv2.imwrite(args.out_file, ret_img)
     elap_time = time.process_time() - start_time
