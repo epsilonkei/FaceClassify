@@ -136,6 +136,11 @@ def getFacesWithBorderUsingHaar(cascade, img):
 def parser_args():
     parser = argparse.ArgumentParser(description='Detect face from image')
     parser.add_argument('--image', '-i', default='images/capture.png', help='Image path')
+    parser.add_argument('--out_img', '-o', default='images/image_result.jpg',
+                        help='Output mage path')
+    parser.add_argument('--dlib', '-d', default=1, type=int,
+                        help='Using dlib or not (positive value for using Dlib, \
+                        negative value for using Haar)')
     args = parser.parse_args()
     return args
 
@@ -144,11 +149,13 @@ if __name__ == '__main__':
     args = parser_args()
     # imgs = getFaces(args.image)
     image = cv2.imread(args.image)
-    # face_cascade = load_cascade()
-    # imgs, bboxes = getFacesWithBorderUsingHaar(face_cascade, image)
-    detector, predictor = load_dlib_predictor()
-    imgs, bboxes = getFacesWithBorderUsingDlib(detector, predictor, image)
+    if args.dlib >= 0:
+        detector, predictor = load_dlib_predictor()
+        imgs, bboxes = getFacesWithBorderUsingDlib(detector, predictor, image)
+    else:
+        face_cascade = load_cascade()
+        imgs, bboxes = getFacesWithBorderUsingHaar(face_cascade, image)
     for i, box in enumerate(bboxes):
         cv2.rectangle(image, (box[2], box[0]), (box[3], box[1]),
                       (0, 300, 300), thickness=2)
-        cv2.imwrite('images/image_result.jpg', image)
+        cv2.imwrite(args.out_img, image)
