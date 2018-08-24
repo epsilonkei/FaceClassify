@@ -141,7 +141,7 @@ def trainClassify():
             x = Variable(xp.array(X_train[perm[i: i+batchsize]]).astype(xp.float32))
             t = Variable(xp.array(y_train[perm[i: i+batchsize]]).astype(xp.int32))
 
-            optimizer.update(model, x, t, True)
+            optimizer.update(model, x, t)
             if device_id >= 0:
                 sum_loss += cuda.to_cpu(model.loss.data) * len(x.data)
                 pred_y.extend((np.sign(cuda.to_cpu(model.y.data)) + 1)/2)
