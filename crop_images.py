@@ -3,11 +3,14 @@ import argparse
 import cv2
 from multiprocessing import Pool
 from detectFaces import getFaces
+from detectAndDraw import load_dlib_predictor
 import time
 
 celeba_folder = 'CelebA'
 dataset_dir = celeba_folder + '/img_align_celeba'
 target_dir = celeba_folder + '/img_align_cropped_celeba'
+
+detector, predictor = load_dlib_predictor()
 
 
 def parser_args():
@@ -31,7 +34,7 @@ def createFolder(directory):
 def cropImage(i, file, args):
     name, ext = os.path.splitext(file)
     if ext in ['.jpg', '.jpeg', '.png', '.gif']:
-        face_img = getFaces(os.path.join(args.dataset_dir, file))
+        face_img = getFaces(detector, predictor, os.path.join(args.dataset_dir, file))
         if len(face_img) > 0:
             target_file = name + time.strftime("%Y%m%d-%H%M%S") + ext
             cv2.imwrite(os.path.join(args.target_dir, target_file), face_img[0])
