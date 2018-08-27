@@ -9,6 +9,8 @@ Run this command to install necessary packages. You also need OpenCV (recommend 
 ```
 # Install neccessary packages
 pip install -r requirements.txt
+# Download dlib model
+./scripts/download_dlib_model.sh
 ```
 
 ### Run scripts to download CelebA datasets and preprocess data:
