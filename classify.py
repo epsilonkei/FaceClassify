@@ -87,7 +87,7 @@ def classifyWithImgResult(gpu_id, org_img, images, bboxes, putText=False):
 
 if __name__ == '__main__':
     args = parser_args()
-    start_time = time.process_time()
+    # start_time = time.process_time()
     # images = detectFaces.getFaces(args.image)
     # classify(args.gpu, images)
     # for i, img in enumerate(images):
@@ -101,5 +101,5 @@ if __name__ == '__main__':
         f_imgs, bboxes = detectFaces.getFacesWithBorderUsingHaar(face_cascade, image)
     ret_img = classifyWithImgResult(args.gpu, image, f_imgs, bboxes, putText=True)
     cv2.imwrite(args.out_file, ret_img)
-    elap_time = time.process_time() - start_time
-    print ('Elapsed time: {0:3.2f} seconds'.format(elap_time))
+    # elap_time = time.process_time() - start_time
+    # print ('Elapsed time: {0:3.2f} seconds'.format(elap_time))
