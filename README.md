@@ -29,5 +29,5 @@ python classify.py --image images/ManHat.jpg
 
 ### Test with web-camera:
 ```
-python capture_face_with_dlib.py
+python demo_with_camera.py
 ```
