@@ -4,7 +4,8 @@ A multi-category face classify application using Deep Convolution Neural Network
 * This application was trained and validated by using [CelebA](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) datasets 
 
 ## How to use:
-### Environment: Run this command to install necessary packages. You also need OpenCV (recommend 3.1.0) for this project. You also may need to add some minor fixes for cascade path (if OpenCV's Face Detection is used).
+### Environment: 
+Run this command to install necessary packages. You also need OpenCV (recommend 3.1.0) for this project. You also may need to add some minor fixes for cascade path (if OpenCV's Face Detection is used).
 ```
 # Install neccessary packages
 pip install -r requirements.txt
