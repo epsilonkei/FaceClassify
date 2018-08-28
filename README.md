@@ -6,7 +6,7 @@ A multi-category face classify application using Deep Convolution Neural Network
 ## How to use:
 ### Environment: 
 Run this command to install necessary packages. You also need OpenCV (recommend 3.1.0) for this project. You also may need to add some minor fixes for cascade path (if OpenCV's Face Detection is used).
-```
+```bash
 # Install neccessary packages
 pip install -r requirements.txt
 # Download dlib model
@@ -14,23 +14,23 @@ pip install -r requirements.txt
 ```
 
 ### Run scripts to download CelebA datasets and preprocess data:
-```
+```bash
 ./scripts/get_celebA_dataset.sh
 ```
 
 ### Training:
-```
+```bash
 python train_classify.py --gpu 0 #for using GPU
 # or python train_classify.py for only using CPU
 ```
 Here is an example of training result in my environment:
 
-|![Train accuracy](https://github.com/epsilonkei/FaceClassify/blob/master/TrainLog/example/train_accuracy.png) | ![Test accuracy](https://github.com/epsilonkei/FaceClassify/blob/master/TrainLog/example/test_accuracy.png)|
+|![Train accuracy](https://github.com/epsilonkei/FaceClassify/blob/master/TrainLog/example/train_accuracy.png)|![Test accuracy](https://github.com/epsilonkei/FaceClassify/blob/master/TrainLog/example/test_accuracy.png)|
 |----------------------------------------------|---------------------------------------------|
 |*Train accuracy for each category and overall*|*Test accuracy for each category and overall*|
 
 ### Test with single image:
-```
+```bash
 python classify.py --image images/GirlWearingHat.jpg
 ```
 Here are some examples for my classification results
@@ -54,7 +54,7 @@ Image Source: <br />
 [3] Image courtesy Flickr user UNDP Eurasia. [Promoting change for Roma people in Moldova](https://www.flickr.com/photos/undpeurasia/30698588843) [last visited 28-August-2018]<br />
 [4] The Daily Dot. [The only thing worse than 'group selfies' is what people are calling them](https://www.dailydot.com/irl/photo-selfie-usie-distinction/) [last visited 28-August-2018]<br />
 ### Test with web-camera:
-```
+```bash
 python demo_with_camera.py
 ```
  Example demo:
