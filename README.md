@@ -23,6 +23,10 @@ pip install -r requirements.txt
 python train_classify.py --gpu 0 #for using GPU
 # or python train_classify.py for only using CPU
 ```
+Here is an example of training result in my environment:
+| ![train_accuracy.eps](https://github.com/epsilonkei/FaceClassify/blob/master/TrainLog/example/train_accuracy.eps) | ![test_accuracy.eps](https://github.com/epsilonkei/FaceClassify/blob/master/TrainLog/example/test_accuracy.eps) |
+|:--:|:--:|
+| *Train accuracy for each category and overall* | *Test accuracy for each category and overall* |
 
 ### Test with single image:
 ```
