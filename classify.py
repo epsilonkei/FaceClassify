@@ -9,8 +9,7 @@ from utils import visualization
 import time
 
 model = CNN(n_class=num_cate)
-# serializers.load_hdf5('TrainLog/20180803_110721_final/FaceClasModel/FaceCl_050.model', model)
-serializers.load_hdf5('TrainLog/20180813_191926/FaceClasModel/FaceCl_050.model', model)
+serializers.load_hdf5('TrainLog/example/example.model', model)
 
 
 def parser_args():
