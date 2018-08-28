@@ -34,12 +34,13 @@ def demo_with_camera():
         else:
             f_imgs, bboxes = detectFaces.getFacesWithBorderUsingHaar(cascade, frame)
         img = classifyWithImgResult(args.gpu, frame, f_imgs, bboxes)
-        cv2.imshow("Face Classify", img)
+        cv2.imshow('Face Classify', img)
+        cv2.moveWindow('Face Classify', 50, 50)
         k = cv2.waitKey(1)  # Wait for 1msec
         if k == 27:  # ESC key to quit
             break
     cap.release()
-    cv2.destroyWindow("Face Classify")
+    cv2.destroyWindow('Face Classify')
 
 
 if __name__ == '__main__':
