@@ -38,15 +38,21 @@ Here are some examples for my classification results
 
 <p float="left">
   <img src="https://github.com/epsilonkei/FaceClassify/blob/master/images/ManyGirls_result.jpg" alt="ManyGirls"
-  width="whatever" height=520>
+  width="whatever" height=410>
   <img src="https://github.com/epsilonkei/FaceClassify/blob/master/images/RomaPeople_result.jpg" alt="RomaPeople"
-  width="whatever" height=520>
+  width="whatever" height=550>
 </p>
 
+Image Source: <br />
+[1] Image courtesy Flickr user Chrissy. [Tanya Markova - Nya](https://www.flickr.com/photos/nyamarkova/21606324236) [last visited 28-August-2018] <br />
+[2] Image courtesy Flickr user Dick Thomas Johnson. [Iwamatsu Ryo from ”Goodbye, Grandpa!” at Opening Ceremony of the Tokyo International Film Festival 2017](https://www.flickr.com/photos/31029865@N06/40202661051) [last visited 28-August-2018].<br />
+[3] Image courtesy Flickr user UNDP Eurasia. [Promoting change for Roma people in Moldova](https://www.flickr.com/photos/undpeurasia/30698588843) [last visited 28-August-2018]<br />
+[4] The Daily Dot. [The only thing worse than 'group selfies' is what people are calling them](https://www.dailydot.com/irl/photo-selfie-usie-distinction/) [last visited 28-August-2018]<br />
 ### Test with web-camera:
 ```
 python demo_with_camera.py
 ```
  Example demo:
+ 
 <img src="https://github.com/epsilonkei/FaceClassify/blob/master/images/FaceClassifyDemo.gif" alt="FaceClassifyDemo"
   width="whatever" height=450> 
