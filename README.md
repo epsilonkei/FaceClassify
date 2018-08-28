@@ -26,10 +26,27 @@ python train_classify.py --gpu 0 #for using GPU
 
 ### Test with single image:
 ```
-python classify.py --image images/ManHat.jpg
+python classify.py --image images/GirlWearingHat.jpg
 ```
+Here are some examples for my classification results
+<p float="left">
+  <img src="https://github.com/epsilonkei/FaceClassify/blob/master/images/GirlWearingHat_result.jpg" alt="GirlWearingHat"
+  width="whatever" height=520>
+  <img src="https://github.com/epsilonkei/FaceClassify/blob/master/images/IwamatsuRyo_result.jpg" alt="IwamatsuRyo"
+  width="whatever" height=520>
+</p>
+
+<p float="left">
+  <img src="https://github.com/epsilonkei/FaceClassify/blob/master/images/ManyGirls_result.jpg" alt="ManyGirls"
+  width="whatever" height=520>
+  <img src="https://github.com/epsilonkei/FaceClassify/blob/master/images/RomaPeople_result.jpg" alt="RomaPeople"
+  width="whatever" height=520>
+</p>
 
 ### Test with web-camera:
 ```
 python demo_with_camera.py
 ```
+ Example demo:
+<img src="https://github.com/epsilonkei/FaceClassify/blob/master/images/FaceClassifyDemo.gif" alt="FaceClassifyDemo"
+  width="whatever" height=450> 
